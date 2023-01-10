@@ -1,6 +1,17 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
+process.on('uncaughtException', (err) => {
+  const fullMessage = err.message;
+  const errmsgStart = 0; // Start at the beginnning
+  const newline = /\n/; // new line character
+  const errmsgStop = fullMessage.search(newline); // Find new line
+  const errmsgLen = errmsgStop - errmsgStart;
+  const errorText = fullMessage.substr(errmsgStart, errmsgLen);
+  console.log(`💥Uncaught Exception💥: ${err.name}`);
+  console.log(`💥💥Error Text: ${errorText}`);
+});
+
 dotenv.config({ path: './config.env' });
 const app = require('./app');
 
@@ -25,17 +36,19 @@ const server = app.listen(port, () => {
 });
 
 process.on('unhandledRejection', (err) => {
-  // console.log(err.name, err.message);
   // console.log('UNHANDLED REJECTION! Shutting Down...');
+  // console.log(err);
   const fullMessage = err.message;
   const errmsgStart = 0; // Start at the beginnning
   const newline = /\n/; // new line character
   const errmsgStop = fullMessage.search(newline); // Find new line
   const errmsgLen = errmsgStop - errmsgStart;
   const errorText = fullMessage.substr(errmsgStart, errmsgLen);
-  console.log(`💥Error Name💥: ${err.name}`);
+  console.log(`💥Unhandled Rejection💥: ${err.name}`);
   console.log(`💥💥Error Text: ${errorText}`);
   server.close(() => {
     process.exit(1);
   });
 });
+
+console.log(x);
